@@ -31,8 +31,8 @@ def run_game():
     while True:
         gf.check_events(invasion_settings, screen, ship, bullets)
         ship.update()
-        gf.update_bullets(aliens, bullets)
-        gf.update_aliens(invasion_settings, aliens)
+        gf.update_bullets(invasion_settings, screen, ship, aliens, bullets)
+        gf.update_aliens(invasion_settings, ship, aliens)
         gf.update_screen(invasion_settings, screen, ship, aliens, bullets)
 
 

@@ -55,7 +55,7 @@ def update_screen(invasion_settings, screen, ship, aliens, bullets):
         bullet.draw_bullet()
 
 
-def update_bullets(aliens, bullets):
+def update_bullets(invasion_settings, screen, ship, aliens, bullets):
     """Update position of bullets and get rid of old bullets"""
     # Update bullet positions
     bullets.update()
@@ -66,11 +66,21 @@ def update_bullets(aliens, bullets):
             bullets.remove(bullet)
         print(len(bullets))
 
+    check_bullet_collision(invasion_settings, screen, ship, aliens, bullets)
+
     # Make the screen visible
     pygame.display.flip()
 
-    # Check in any bullets hit any aliens
+
+def check_bullet_collision(invasion_settings, screen, ship, aliens, bullets):
+    """Respond to bullet-alien collision"""
+    # Remove any bullets and aliens that collide
     collisions = pygame.sprite.groupcollide(bullets, aliens, True, True)
+
+    if len(aliens) == 0:
+        # Destroy existing bullets and create new fleet
+        bullets.empty()
+        create_fleet(invasion_settings, screen, ship, aliens)
 
 
 def get_number_aliens_x(invasion_settings, alien_width):
@@ -87,7 +97,7 @@ def get_number_rows(invasion_settings, ship_height, alien_height):
     return number_rows
 
 
-def creat_alien(invasion_settings, screen, aliens, alien_number, row_number):
+def create_alien(invasion_settings, screen, aliens, alien_number, row_number):
     """Create alien and place it in a row"""
     alien = Alien(invasion_settings, screen)
     alien_width = alien.rect.width
@@ -109,7 +119,7 @@ def create_fleet(invasion_settings, screen, ship, aliens):
     # Create the fleet of aliens
     for row_number in range(number_rows):
         for alien_number in range(number_aliens_x):
-            creat_alien(invasion_settings, screen, aliens, alien_number, row_number)
+            create_alien(invasion_settings, screen, aliens, alien_number, row_number)
 
 
 def check_fleet_edges(invasion_settings, aliens):
@@ -127,7 +137,11 @@ def change_fleet_direction(invasion_settings, aliens):
     invasion_settings.fleet_direction *= -1
 
 
-def update_aliens(invasion_settings, aliens):
+def update_aliens(invasion_settings, ship, aliens):
     """Update alien fleet position"""
     check_fleet_edges(invasion_settings, aliens)
     aliens.update()
+
+    # Look for alien-ship collision
+    if pygame.sprite.spritecollideany(ship, aliens):
+        print("Ship hit!")
