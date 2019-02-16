@@ -1,8 +1,9 @@
 import pygame
 
-class Ship():
 
+class Ship():
     """Initialize ship and set starting position"""
+
     def __init__(self, screen, invasion_settings):
         self.screen = screen
         self.invasion_settings = invasion_settings
@@ -23,8 +24,7 @@ class Ship():
         self.moving_right = False
         self.moving_left = False
 
-
-    def update (self):
+    def update(self):
         """Update ship's position based on movement flag"""
         # Updating ship's center value
         if self.moving_right and self.rect.right < self.screen_rect.right:
