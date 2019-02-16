@@ -10,10 +10,14 @@ def check_keydown_events(event, invasion_settings, screen, ship, bullets):
     elif event.key == pygame.K_LEFT:
         ship.moving_left = True
     elif event.key == pygame.K_SPACE:
-        # Create a new bullet and add to bullet group
+        fire_bullet(invasion_settings, screen, ship, bullets)
+
+def fire_bullet(invasion_settings, screen, ship, bullets):
+    """Fire bullet if there is less than three bullets on the screen"""
+    # Create a new bullet and add to bullet group
+    if len(bullets) < invasion_settings.bullets_allowed:
         new_bullet = Bullet(invasion_settings, screen, ship)
         bullets.add(new_bullet)
-
 
 def check_keyup_events(event, ship):
     """Responds to key releases"""
@@ -42,6 +46,18 @@ def update_screen(invasion_settings, screen, ship, bullets):
     # Redraws all bullets from ship
     for bullet in bullets.sprites():
         bullet.draw_bullet()
+
+def update_bullets(bullets):
+    """Update position of bullets and get rid of old bullets"""
+    # Update bullet positions
+    bullets.update()
+
+    # Get rid of bullets that have left the screen
+    for bullet in bullets.copy():
+        if bullet.rect.bottom <= 0:
+            bullets.remove(bullet)
+        print(len(bullets))
+
 
     # Make the screen visible
     pygame.display.flip()
