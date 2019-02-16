@@ -6,8 +6,8 @@ class GameStats():
         self.invasion_settings = invasion_settings
         self.reset_stats()
 
-        # Start invasion in an active state
-        self.game_active = True
+        # Start invasion in an inactive state
+        self.game_active = False
 
     def reset_stats(self):
         """Initialize stats that can change during the game"""
