@@ -2,6 +2,7 @@ import sys
 import pygame
 from bullet import Bullet
 from alien import Alien
+from time import sleep
 
 
 def check_keydown_events(event, invasion_settings, screen, ship, bullets):
@@ -137,11 +138,45 @@ def change_fleet_direction(invasion_settings, aliens):
     invasion_settings.fleet_direction *= -1
 
 
-def update_aliens(invasion_settings, ship, aliens):
+def ship_hit(invasion_settings, stats, screen, ship, aliens, bullets):
+    """Responds to ship being hit"""
+    if stats.ships_left > 0:
+        # Subtracts from ships left
+        stats.ships_left -= 1
+
+        # Empty the list of aliens and bullets
+        aliens.empty()
+        bullets.empty()
+
+        # Create a new fleet and center ship
+        create_fleet(invasion_settings, screen, ship, aliens)
+        ship.center_ship()
+
+        # Pause
+        sleep(0.5)
+
+    else:
+        stats.game_active = False
+
+
+def check_aliens_bottom(invasion_settings, stats, screen, ship, aliens, bullets):
+    """Checks to see if any aliens are at the bottom of the screen"""
+    screen_rect = screen.get_rect()
+    for alien in aliens.sprites():
+        if alien.rect.bottom >= screen_rect.bottom:
+            # Treated as if ship was hit
+            ship_hit(invasion_settings, stats, screen, ship, aliens, bullets)
+            break
+
+
+def update_aliens(invasion_settings, stats, screen, ship, aliens, bullets):
     """Update alien fleet position"""
     check_fleet_edges(invasion_settings, aliens)
     aliens.update()
 
     # Look for alien-ship collision
     if pygame.sprite.spritecollideany(ship, aliens):
-        print("Ship hit!")
+        ship_hit(invasion_settings, stats, screen, ship, aliens, bullets)
+
+    # Look for aliens hitting the bottom of the screen
+    check_aliens_bottom(invasion_settings, stats, screen, ship, aliens, bullets)
