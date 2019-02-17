@@ -1,5 +1,6 @@
 import pygame.font
 
+
 class Button():
 
     def __init__(self, invasion_settings, screen, msg):
@@ -7,12 +8,7 @@ class Button():
         self.screen = screen
         self.screen_rect = screen.get_rect()
 
-        # Set the dimensions of the button
-        self.width = 200
-        self.height = 50
-        self.button_color = (0, 255, 0)
-        self.text_color = (255, 255, 255)
-        self.font = pygame.font.SysFont(None, 48)
+        self.button_attributes()
 
         # Build the button's rect object and center it
         self.rect = pygame.Rect(0, 0, self.width, self.height)
@@ -20,6 +16,14 @@ class Button():
 
         # The button message only being prepped once
         self.prep_msg(msg)
+
+    def button_attributes(self):
+        # Set the dimensions of the button
+        self.width = 200
+        self.height = 50
+        self.button_color = (0, 255, 0)
+        self.text_color = (255, 255, 255)
+        self.font = pygame.font.SysFont(None, 48)
 
     def prep_msg(self, msg):
         """Center text on button and turn button into a rendered image"""

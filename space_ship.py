@@ -1,28 +1,31 @@
 import pygame
+from pygame.sprite import Sprite
 
 
-class Ship():
-    """Initialize ship and set starting position"""
+class Ship(Sprite):
 
-    def __init__(self, screen, invasion_settings):
+    def __init__(self, invasion_settings, screen):
+        """Initialize ship and set starting position"""
+        super().__init__()
         self.screen = screen
         self.invasion_settings = invasion_settings
 
-        # Load ship image
-        self.image = pygame.image.load('images/space_ship.png')
-        self.rect = self.image.get_rect()
-        self.screen_rect = screen.get_rect()
-
-        # Setting position to bottom/center screen
-        self.rect.centerx = self.screen_rect.centerx
-        self.rect.bottom = self.screen_rect.bottom
-
-        # Store decimal value for ship's center
-        self.center = float(self.rect.centerx)
+        self.ship_image(screen)
 
         # Moving flag
         self.moving_right = False
         self.moving_left = False
+
+    def ship_image(self, screen):
+        # Load ship image
+        self.image = pygame.image.load('images/space_ship.png')
+        self.rect = self.image.get_rect()
+        self.screen_rect = screen.get_rect()
+        # Setting position to bottom/center screen
+        self.rect.centerx = self.screen_rect.centerx
+        self.rect.bottom = self.screen_rect.bottom
+        # Store decimal value for ship's center
+        self.center = float(self.rect.centerx)
 
     def update(self):
         """Update ship's position based on movement flag"""
